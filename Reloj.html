@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reloj de Pantalla Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            /* Fuente por defecto, se cambiará si el usuario elige otra */
+            font-family: 'Inter', sans-serif;
+            transition: background-image 0.5s ease-in-out;
+        }
+        /* Ocultar el 'spinner' de los campos numéricos */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* --- Estilos para el Interruptor (Toggle Switch) --- */
+        .toggle-checkbox:checked + .toggle-bg {
+            background-color: #3b82f6; /* Color azul (blue-500) */
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-bg:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+        .toggle-bg {
+            width: 3.5rem; /* w-14 */
+            height: 2rem; /* h-8 */
+            transition: background-color 0.2s ease-in-out;
+        }
+        .toggle-bg:after {
+            content: '';
+            position: absolute;
+            top: 0.25rem; /* top-1 */
+            left: 0.25rem; /* left-1 */
+            width: 1.5rem; /* w-6 */
+            height: 1.5rem; /* h-6 */
+            background-color: white;
+            border-radius: 9999px; /* rounded-full */
+            border: 2px solid #e5e7eb; /* border-gray-200 */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Estilo para el <select> del panel */
+        .config-select {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem; /* px-3 py-2 */
+            color: white;
+            width: 100%;
+        }
+        .config-select option {
+            background-color: #333;
+            color: white;
+        }
+        
+        /* Estilos para los inputs de Fondos Alternos */
+        .alt-bg-input-group {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.375rem;
+            width: 100%;
+        }
+        .alt-bg-input-group input[type="text"] {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            color: white;
+            min-width: 0; /* Solución para flex-grow en inputs */
+        }
+        .alt-bg-input-group input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .alt-bg-input-group input[type="file"] {
+            display: none; /* El input de archivo real está oculto */
+        }
+        .alt-bg-input-group label { /* Botón de subir archivo */
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .alt-bg-input-group label:hover {
+            color: white;
+        }
+        .alt-bg-input-group .clear-alt-bg { /* Botón de borrar */
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        .alt-bg-input-group .clear-alt-bg:hover {
+            color: white;
+        }
+
+    </style>
+</head>
+<body class="bg-black text-white h-screen w-screen overflow-hidden flex items-center justify-center relative transition-all duration-500" id="main-body">
+
+    <div id="clock-container" class="flex flex-col items-center justify-center text-center transition-colors duration-300">
+        <div id="date-display" class="text-2xl sm:text-3xl md:text-4xl opacity-70 mb-4" style="font-family: 'Inter', sans-serif;">
+            Cargando fecha...
+        </div>
+        
+        <div class="flex items-baseline justify-center whitespace-nowrap">
+            <div id="time-display" class="font-bold text-[12rem] sm:text-[14rem] md:text-[18rem] lg:text-[24rem] leading-none opacity-70">
+                00:00
+            </div>
+            <div id="seconds-display" class="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-7xl leading-none opacity-70 pl-2 sm:pl-4 md:pl-6">
+                :00
+            </div>
+        </div>
+    </div>
+
+    <button id="settings-btn" class="absolute top-6 right-6 p-3 text-white opacity-50 hover:opacity-100 transition-opacity z-20">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+    </button>
+    
+    <button id="fullscreen-btn" class="absolute top-6 left-6 p-3 text-white opacity-50 hover:opacity-100 transition-opacity z-20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-expand"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21h4.8"/><path d="M3 12.6V7.8A4.8 4.8 0 0 1 7.8 3h4.8"/><path d="M16.2 3H21v4.8"/></svg>
+    </button>
+
+    <div id="app-links" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-4 z-10">
+        <a href="https://www.espana.fm/" target="_blank" class="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-xs font-medium opacity-70 hover:opacity-100 transition-all">
+            Abrir Radio FM
+        </a>
+        <a href="spotify:" class="px-3 py-1 bg-white/10 border border-white/20 rounded-lg text-xs font-medium opacity-70 hover:opacity-100 transition-all">
+            Abrir Spotify
+        </a>
+    </div>
+    <div id="settings-panel" class="absolute inset-0 w-full h-full bg-black/70 flex items-center justify-center p-6 z-30 hidden backdrop-blur-md overflow-y-auto">
+        <div class="bg-white/10 border border-white/20 text-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md relative backdrop-blur-lg my-auto">
+            <button id="close-panel-btn" class="absolute top-4 right-4 text-gray-300 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            
+            <h2 class="text-2xl font-bold mb-6">Configuración</h2>
+
+            <div class="space-y-4 mb-6">
+                <h3 class="text-sm font-semibold text-gray-300 uppercase">Formato de Hora</h3>
+                <div class="flex items-center justify-between">
+                    <label for="show-seconds-toggle" class="font-medium">Mostrar segundos</label>
+                    <input type="checkbox" id="show-seconds-toggle" class="toggle-checkbox hidden">
+                    <label for="show-seconds-toggle" class="toggle-bg relative inline-block bg-gray-600 border-2 border-transparent rounded-full cursor-pointer"></label>
+                </div>
+                <div class="flex items-center justify-between">
+                    <label for="hour-format-toggle" class="font-medium">Formato 24 horas</label>
+                    <input type="checkbox" id="hour-format-toggle" class="toggle-checkbox hidden">
+                    <label for="hour-format-toggle" class="toggle-bg relative inline-block bg-gray-600 border-2 border-transparent rounded-full cursor-pointer"></label>
+                </div>
+            </div>
+
+            <hr class="border-white/20 my-6">
+
+            <div class="space-y-4 mb-6">
+                <h3 class="text-sm font-semibold text-gray-300 uppercase">Estilo del Reloj</h3>
+                <div class="flex items-center justify-between">
+                    <label for="text-color-picker" class="font-medium">Color del texto</label>
+                    <div class="flex items-center space-x-2">
+                        <button id="reset-color-btn" class="text-xs text-gray-300 hover:text-white">Restablecer</button>
+                        <input type="color" id="text-color-picker" class="w-10 h-10 p-0 border-none rounded cursor-pointer bg-transparent" value="#FFFFFF">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                     <label for="font-select" class="font-medium">Fuente del reloj</label>
+                </div>
+                <select id="font-select" class="config-select">
+                    <option value="'Inter', sans-serif">Moderno (Inter)</option>
+                    <option value="'Oswald', sans-serif">Condensado (Oswald)</option>
+                    <option value="'Archivo Black', sans-serif">Impacto (Archivo)</option>
+                    <option value="'Montserrat', sans-serif">Geométrico (Montserrat)</option>
+                    <option value="'Bebas Neue', cursive">Alto (Bebas Neue)</option>
+                    <option value="'Anton', sans-serif">Fuerte (Anton)</option>
+                </select>
+            </div>
+
+            <hr class="border-white/20 my-6">
+
+            <div class="space-y-4 mb-6">
+                <h3 class="text-sm font-semibold text-gray-300 uppercase">Fondos Alternos</h3>
+                <div class="flex items-center justify-between">
+                    <label for="alt-bg-toggle" class="font-medium">Activar fondos alternos</label>
+                    <input type="checkbox" id="alt-bg-toggle" class="toggle-checkbox hidden">
+                    <label for="alt-bg-toggle" class="toggle-bg relative inline-block bg-gray-600 border-2 border-transparent rounded-full cursor-pointer"></label>
+                </div>
+                <div id="alt-bg-inputs-container" class="hidden space-y-2 pt-2 max-h-48 overflow-y-auto pr-2">
+                    <label class="text-xs text-gray-300">Añade URLs o sube archivos (rotan cada 10 min):</label>
+                    
+                    <p class="text-xs text-yellow-400/80 my-1">Nota: Los archivos subidos de más de 2-3MB pueden no guardarse al recargar.</p>
+                    
+                    </div>
+            </div>
+
+            <hr class="border-white/20 my-6">
+
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold text-gray-300 uppercase">Fondo Manual</h3>
+                <div class="pt-2">
+                    <label class="block text-sm font-medium text-gray-200 mb-2">Fondo por URL</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="bg-url-input" placeholder="Pegar URL de la imagen" class="flex-1 w-full px-3 py-2 border border-white/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/10 text-white placeholder-gray-400">
+                        <button id="set-bg-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium">Usar</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="bg-file-input" class="block text-sm font-medium text-gray-200 mb-2">...o subir desde la tablet:</label>
+                    <input type="file" id="bg-file-input" accept="image/*" class="block w-full text-sm text-gray-300
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-md file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-white/20 file:text-white
+                        hover:file:bg-white/30 cursor-pointer
+                    "/>
+                    <p class="text-xs text-yellow-400/80 mt-1">Nota: Archivos muy grandes ( > 5MB) pueden no guardarse al recargar.</p>
+                </div>
+                
+                <button id="reset-bg-btn" class="w-full mt-2 px-4 py-2 bg-white/20 text-white rounded-md hover:bg-white/30">Quitar fondo (Negro)</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- REFERENCIAS A ELEMENTOS DEL DOM ---
+        const timeDisplay = document.getElementById('time-display');
+        const secondsDisplay = document.getElementById('seconds-display');
+        const dateDisplay = document.getElementById('date-display');
+        const mainBody = document.getElementById('main-body');
+        const clockContainer = document.getElementById('clock-container');
+        
+        // --- Elementos de Configuración ---
+        const settingsBtn = document.getElementById('settings-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closePanelBtn = document.getElementById('close-panel-btn');
+        // Fondo Manual
+        const bgUrlInput = document.getElementById('bg-url-input');
+        const setBgBtn = document.getElementById('set-bg-btn');
+        const bgFileInput = document.getElementById('bg-file-input');
+        const resetBgBtn = document.getElementById('reset-bg-btn');
+        // Formato y Estilo
+        const showSecondsToggle = document.getElementById('show-seconds-toggle');
+        const hourFormatToggle = document.getElementById('hour-format-toggle');
+        const textColorPicker = document.getElementById('text-color-picker');
+        const resetColorBtn = document.getElementById('reset-color-btn');
+        const fontSelect = document.getElementById('font-select');
+        // Fondos Alternos
+        const altBgToggle = document.getElementById('alt-bg-toggle');
+        const altBgInputsContainer = document.getElementById('alt-bg-inputs-container');
+
+        // --- VARIABLES GLOBALES ---
+        let altBgInterval = null;
+        let currentAltBgIndex = 0;
+
+        // --- OBJETO DE CONFIGURACIÓN ---
+        const defaultSettings = {
+            bgUrl: null, // Fondo manual estático
+            textColor: '#FFFFFF',
+            showSeconds: true,
+            is24Hour: true,
+            fontFamily: "'Inter', sans-serif",
+            useAlternatingBgs: false,
+            alternatingBgSources: Array(10).fill({ type: null, value: null }) // Almacena {type: 'url'|'data', value: '...'}
+        };
+        let settings = { ...defaultSettings };
+
+        // --- LÓGICA DEL RELOJ ---
+        const dateOptions = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            let mainTimeString = '';
+            const secondsString = `:${seconds}`;
+
+            if (settings.is24Hour) {
+                mainTimeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
+            } else {
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                mainTimeString = `${hours}:${minutes} ${ampm}`;
+            }
+            timeDisplay.textContent = mainTimeString;
+            secondsDisplay.textContent = secondsString;
+
+            const dateString = (now.toLocaleDateString('es-ES', dateOptions)).replace(/^\w/, (c) => c.toUpperCase());
+            if (dateDisplay.textContent !== dateString) {
+                dateDisplay.textContent = dateString;
+            }
+        }
+
+        // --- LÓGICA DE FONDOS ALTERNOS ---
+
+        // Función auxiliar para aplicar el oscurecimiento a la URL de la imagen
+        function getDarkenedBackground(imageUrl) {
+            if (!imageUrl) return 'none';
+            // Ajusta la opacidad del color rgba aquí (0.4 es 40% de opacidad)
+            // Puedes cambiar rgba(0,0,0,0.4) a rgba(0,0,0,0.6) para un fondo más oscuro si es necesario.
+            return `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${imageUrl})`;
+        }
+
+        function stopAlternatingBackgrounds() {
+            if (altBgInterval) {
+                clearInterval(altBgInterval);
+                altBgInterval = null;
+            }
+        }
+
+        function setNextAlternatingBg(validSources) {
+            if (validSources.length === 0) {
+                mainBody.style.backgroundImage = 'none'; // Sin fotos, fondo negro
+                return;
+            }
+            const source = validSources[currentAltBgIndex];
+            mainBody.style.backgroundImage = getDarkenedBackground(source.value);
+            mainBody.style.backgroundSize = 'cover';
+            mainBody.style.backgroundPosition = 'center';
+            currentAltBgIndex = (currentAltBgIndex + 1) % validSources.length;
+        }
+
+        function startAlternatingBackgrounds() {
+            stopAlternatingBackgrounds(); // Detener cualquier timer anterior
+            const validSources = settings.alternatingBgSources.filter(src => src && src.value);
+            
+            setNextAlternatingBg(validSources); // Poner la primera imagen inmediatamente
+            
+            if (validSources.length > 0) {
+                // Rotar cada 10 minutos
+                altBgInterval = setInterval(() => setNextAlternatingBg(validSources), 10 * 60 * 1000);
+            }
+        }
+
+        // --- LÓGICA DE CONFIGURACIÓN ---
+
+        function saveSettings() {
+            // Protección contra error de límite de localStorage
+            try {
+                localStorage.setItem('clockSettingsV11', JSON.stringify(settings)); // Clave V11
+            } catch (e) {
+                console.error("Error al guardar la configuración (límite de localStorage excedido?):", e);
+                // No se pudo guardar, probablemente porque las imágenes (DataURL) son muy grandes
+            }
+        }
+
+        function applySettings() {
+            // Aplicar color y fuente
+            clockContainer.style.color = settings.textColor;
+            timeDisplay.style.fontFamily = settings.fontFamily;
+            secondsDisplay.style.fontFamily = settings.fontFamily;
+            dateDisplay.style.fontFamily = settings.fontFamily; // Aplicar fuente también a la fecha
+            // Mostrar/ocultar segundos
+            secondsDisplay.style.display = settings.showSeconds ? 'block' : 'none';
+
+            // --- Lógica de Fondo ---
+            if (settings.useAlternatingBgs) {
+                startAlternatingBackgrounds();
+            } else {
+                stopAlternatingBackgrounds();
+                // Aplicar fondo manual (estático)
+                mainBody.style.backgroundImage = getDarkenedBackground(settings.bgUrl);
+                mainBody.style.backgroundSize = 'cover';
+                mainBody.style.backgroundPosition = 'center';
+            }
+            
+            // Actualizar reloj para formato
+            updateClock();
+        }
+
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('clockSettingsV11'); // Clave V11
+            if (savedSettings) {
+                settings = { ...defaultSettings, ...JSON.parse(savedSettings) };
+                // Asegurarse de que el array tenga 10 elementos
+                settings.alternatingBgSources = (settings.alternatingBgSources || Array(10).fill({ type: null, value: null })).concat(Array(10).fill({ type: null, value: null })).slice(0, 10);
+            }
+            
+            // Actualizar la UI del panel de config
+            showSecondsToggle.checked = settings.showSeconds;
+            hourFormatToggle.checked = settings.is24Hour;
+            textColorPicker.value = settings.textColor;
+            fontSelect.value = settings.fontFamily;
+            
+            // Cargar fondo manual
+            if (settings.bgUrl && !settings.bgUrl.startsWith('data:')) {
+                bgUrlInput.value = settings.bgUrl;
+            }
+
+            // Cargar fondos alternos
+            altBgToggle.checked = settings.useAlternatingBgs;
+            if (settings.useAlternatingBgs) {
+                altBgInputsContainer.classList.remove('hidden');
+            } else {
+                altBgInputsContainer.classList.add('hidden');
+            }
+            // (Re)generar los 10 inputs de fondos alternos
+            generateAltBgInputs();
+
+            // Aplicar configuraciones cargadas
+            applySettings();
+        }
+
+        // --- Generador de Inputs para Fondos Alternos ---
+        function generateAltBgInputs() {
+            // Limpiar y poner títulos
+            altBgInputsContainer.innerHTML = `
+                <label class="text-xs text-gray-300">Añade URLs o sube archivos (rotan cada 10 min):</label>
+                <p class="text-xs text-yellow-400/80 my-1">Nota: Los archivos subidos de más de 2-3MB pueden no guardarse al recargar.</p>
+            `;
+            
+            for (let i = 0; i < 10; i++) {
+                const source = settings.alternatingBgSources[i] || { type: null, value: null };
+                
+                const group = document.createElement('div');
+                group.className = 'alt-bg-input-group';
+                group.dataset.index = i;
+
+                // Input de URL
+                const urlInput = document.createElement('input');
+                urlInput.type = 'text';
+                urlInput.placeholder = `URL de imagen ${i + 1}`;
+                urlInput.className = 'alt-bg-url';
+                if (source.type === 'url') {
+                    urlInput.value = source.value;
+                }
+                
+                // Input de Archivo (oculto)
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.id = `alt-bg-file-${i}`;
+                fileInput.className = 'alt-bg-file';
+                fileInput.accept = 'image/*';
+
+                // Label (botón) para el input de archivo
+                const fileLabel = document.createElement('label');
+                fileLabel.htmlFor = `alt-bg-file-${i}`;
+                fileLabel.title = 'Subir archivo';
+                fileLabel.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>`;
+                
+                // Botón de Limpiar
+                const clearBtn = document.createElement('span');
+                clearBtn.className = 'clear-alt-bg';
+                clearBtn.title = 'Borrar entrada';
+                clearBtn.innerHTML = '&times;';
+
+                // Mostrar URL o "Archivo subido"
+                if (source.type === 'data') {
+                    urlInput.value = 'Archivo subido (local)';
+                    urlInput.disabled = true;
+                }
+
+                // Añadir listeners
+                urlInput.addEventListener('change', (e) => {
+                    const value = e.target.value.trim();
+                    if (value) {
+                        settings.alternatingBgSources[i] = { type: 'url', value: value };
+                    } else {
+                        settings.alternatingBgSources[i] = { type: null, value: null }; // Limpiar si está vacío
+                    }
+                    saveSettings();
+                    if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (re) => {
+                            settings.alternatingBgSources[i] = { type: 'data', value: re.target.result };
+                            urlInput.value = 'Archivo subido (local)'; // Mostrar feedback
+                            urlInput.disabled = true;
+                            saveSettings();
+                            if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                clearBtn.addEventListener('click', () => {
+                    settings.alternatingBgSources[i] = { type: null, value: null };
+                    urlInput.value = '';
+                    urlInput.disabled = false;
+                    fileInput.value = null; // Resetear el input de archivo
+                    saveSettings();
+                    if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                });
+
+                group.appendChild(urlInput);
+                group.appendChild(fileInput);
+                group.appendChild(fileLabel);
+                group.appendChild(clearBtn);
+                altBgInputsContainer.appendChild(group);
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Panel de Configuración
+        settingsBtn.addEventListener('click', () => settingsPanel.classList.remove('hidden'));
+        closePanelBtn.addEventListener('click', () => settingsPanel.classList.add('hidden'));
+
+        // Config: Mostrar Segundos
+        showSecondsToggle.addEventListener('change', () => {
+            settings.showSeconds = showSecondsToggle.checked;
+            applySettings();
+            saveSettings();
+        });
+
+        // Config: Formato de Hora
+        hourFormatToggle.addEventListener('change', () => {
+            settings.is24Hour = hourFormatToggle.checked;
+            applySettings();
+            saveSettings();
+        });
+
+        // Config: Color de Texto
+        textColorPicker.addEventListener('input', () => {
+            settings.textColor = textColorPicker.value;
+            applySettings();
+        });
+        textColorPicker.addEventListener('change', saveSettings);
+
+        resetColorBtn.addEventListener('click', () => {
+            settings.textColor = defaultSettings.textColor;
+            textColorPicker.value = defaultSettings.textColor;
+            applySettings();
+            saveSettings();
+        });
+
+        // Config: Fuente
+        fontSelect.addEventListener('change', () => {
+            settings.fontFamily = fontSelect.value;
+            applySettings();
+            saveSettings();
+        });
+
+        // --- Fondos Alternos ---
+        altBgToggle.addEventListener('change', () => {
+            settings.useAlternatingBgs = altBgToggle.checked;
+            if (settings.useAlternatingBgs) {
+                altBgInputsContainer.classList.remove('hidden');
+            } else {
+                altBgInputsContainer.classList.add('hidden');
+            }
+            applySettings(); // Aplicar cambia el fondo (activa/desactiva)
+            saveSettings();
+        });
+        
+        // --- Fondo Manual ---
+        // (Al usar fondo manual, se desactivan los alternos)
+        setBgBtn.addEventListener('click', () => {
+            const url = bgUrlInput.value.trim();
+            if (url) {
+                settings.bgUrl = url;
+                settings.useAlternatingBgs = false; // Desactivar alternos
+                altBgToggle.checked = false;
+                altBgInputsContainer.classList.add('hidden');
+                applySettings();
+                saveSettings();
+                settingsPanel.classList.add('hidden');
+            }
+        });
+
+        bgFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    settings.bgUrl = e.target.result;
+                    settings.useAlternatingBgs = false; // Desactivar alternos
+                    altBgToggle.checked = false;
+                    altBgInputsContainer.classList.add('hidden');
+                    applySettings();
+                    saveSettings();
+                };
+                reader.readAsDataURL(file);
+                settingsPanel.classList.add('hidden');
+            }
+        });
+
+
+
+        resetBgBtn.addEventListener('click', () => {
+            settings.bgUrl = defaultSettings.bgUrl;
+            settings.useAlternatingBgs = false; // Desactivar alternos
+            altBgToggle.checked = false;
+            altBgInputsContainer.classList.add('hidden');
+            bgUrlInput.value = '';
+            bgFileInput.value = null;
+            applySettings();
+            saveSettings();
+            settingsPanel.classList.add('hidden');
+        });
+
+        // --- PANTALLA COMPLETA ---
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.error(`Error al intentar entrar en pantalla completa: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        document.addEventListener('fullscreenchange', () => {
+            const isFullscreen = !!document.fullscreenElement;
+            // El botón de pantalla completa se oculta, los otros (config y radio/spotify) permanecen visibles.
+            fullscreenBtn.classList.toggle('opacity-0', isFullscreen);
+        });
+
+        // --- INICIAR ---
+        try {
+            loadSettings(); // Cargar configuraciones al inicio
+        } catch (e) {
+            console.error("Error al cargar configuración (posiblemente corrupta):", e);
+            localStorage.removeItem('clockSettingsV11'); // Limpiar config corrupta
+            // Cargar configuración por defecto si falla
+            applySettings(); // Aplica 'defaultSettings'
+        }
+        
+        updateClock(); // Llamada inicial para evitar el "00:00"
+        setInterval(updateClock, 1000); // Iniciar el bucle del reloj
+
+    </script>
+</body>
+</html>
