@@ -4,7 +4,7 @@ Este es un proyecto personal para crear un reloj digital minimalista, personaliz
 
 Originalmente, este proyecto nació con la idea de tener un reloj siempre visible y estético en mi dispositivo **Movistar Home (Aura)**. Como muchos sabrán, Movistar descontinuó el soporte para este dispositivo, dejándolo esencialmente como un pisapapeles digital.
 
-Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo.
+Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo o también tener la opción de abrirlo con su URL desde un navegador en el Movistar Aura **[https://jmlopez-pruebas.github.io/reloj](https://jmlopez-pruebas.github.io/reloj/)**
 
 ## El Hack: Reviviendo el Movistar Home
 
