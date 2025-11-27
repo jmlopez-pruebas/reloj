@@ -15,20 +15,16 @@
 
     <style>
         body {
-            /* Fuente por defecto, se cambiará si el usuario elige otra */
             font-family: 'Inter', sans-serif;
             transition: background-image 0.5s ease-in-out;
         }
-        /* Ocultar el 'spinner' de los campos numéricos */
         input[type='number']::-webkit-inner-spin-button,
         input[type='number']::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-
-        /* --- Estilos para el Interruptor (Toggle Switch) --- */
         .toggle-checkbox:checked + .toggle-bg {
-            background-color: #3b82f6; /* Color azul (blue-500) */
+            background-color: #3b82f6;
             border-color: #3b82f6;
         }
         .toggle-checkbox:checked + .toggle-bg:after {
@@ -36,29 +32,27 @@
             border-color: white;
         }
         .toggle-bg {
-            width: 3.5rem; /* w-14 */
-            height: 2rem; /* h-8 */
+            width: 3.5rem;
+            height: 2rem;
             transition: background-color 0.2s ease-in-out;
         }
         .toggle-bg:after {
             content: '';
             position: absolute;
-            top: 0.25rem; /* top-1 */
-            left: 0.25rem; /* left-1 */
-            width: 1.5rem; /* w-6 */
-            height: 1.5rem; /* h-6 */
+            top: 0.25rem;
+            left: 0.25rem;
+            width: 1.5rem;
+            height: 1.5rem;
             background-color: white;
-            border-radius: 9999px; /* rounded-full */
-            border: 2px solid #e5e7eb; /* border-gray-200 */
+            border-radius: 9999px;
+            border: 2px solid #e5e7eb;
             transition: transform 0.2s ease-in-out;
         }
-
-        /* Estilo para el <select> del panel */
         .config-select {
             background-color: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 0.375rem; /* rounded-md */
-            padding: 0.5rem 0.75rem; /* px-3 py-2 */
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
             color: white;
             width: 100%;
         }
@@ -66,8 +60,6 @@
             background-color: #333;
             color: white;
         }
-        
-        /* Estilos para los inputs de Fondos Alternos */
         .alt-bg-input-group {
             display: flex;
             align-items: center;
@@ -82,15 +74,15 @@
             border: none;
             padding: 0.5rem 0.75rem;
             color: white;
-            min-width: 0; /* Solución para flex-grow en inputs */
+            min-width: 0;
         }
         .alt-bg-input-group input[type="text"]::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
         .alt-bg-input-group input[type="file"] {
-            display: none; /* El input de archivo real está oculto */
+            display: none;
         }
-        .alt-bg-input-group label { /* Botón de subir archivo */
+        .alt-bg-input-group label {
             padding: 0.5rem 0.75rem;
             cursor: pointer;
             border-left: 1px solid rgba(255, 255, 255, 0.3);
@@ -99,7 +91,7 @@
         .alt-bg-input-group label:hover {
             color: white;
         }
-        .alt-bg-input-group .clear-alt-bg { /* Botón de borrar */
+        .alt-bg-input-group .clear-alt-bg {
             padding: 0.5rem 0.75rem;
             cursor: pointer;
             border-left: 1px solid rgba(255, 255, 255, 0.3);
@@ -222,7 +214,7 @@
                 </div>
 
                 <div>
-                    <label for="bg-file-input" class="block text-sm font-medium text-gray-200 mb-2">...o subir desde la tablet:</label>
+                    <label for="bg-file-input" class="block text-sm font-medium text-gray-200 mb-2">...o subir desde el dispositivo:</label>
                     <input type="file" id="bg-file-input" accept="image/*" class="block w-full text-sm text-gray-300
                         file:mr-4 file:py-2 file:px-4
                         file:rounded-md file:border-0
@@ -240,89 +232,79 @@
     </div>
 
     <script>
-        // --- REFERENCIAS A ELEMENTOS DEL DOM ---
-        const timeDisplay = document.getElementById('time-display');
-        const secondsDisplay = document.getElementById('seconds-display');
-        const dateDisplay = document.getElementById('date-display');
-        const mainBody = document.getElementById('main-body');
-        const clockContainer = document.getElementById('clock-container');
+    const timeDisplay = document.getElementById('time-display');
+    const secondsDisplay = document.getElementById('seconds-display');
+    const dateDisplay = document.getElementById('date-display');
+    const mainBody = document.getElementById('main-body');
+    const clockContainer = document.getElementById('clock-container');
         
-        // --- Elementos de Configuración ---
-        const settingsBtn = document.getElementById('settings-btn');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        const settingsPanel = document.getElementById('settings-panel');
-        const closePanelBtn = document.getElementById('close-panel-btn');
-        // Fondo Manual
-        const bgUrlInput = document.getElementById('bg-url-input');
-        const setBgBtn = document.getElementById('set-bg-btn');
-        const bgFileInput = document.getElementById('bg-file-input');
-        const resetBgBtn = document.getElementById('reset-bg-btn');
-        // Formato y Estilo
-        const showSecondsToggle = document.getElementById('show-seconds-toggle');
-        const hourFormatToggle = document.getElementById('hour-format-toggle');
-        const textColorPicker = document.getElementById('text-color-picker');
-        const resetColorBtn = document.getElementById('reset-color-btn');
-        const fontSelect = document.getElementById('font-select');
-        // Fondos Alternos
-        const altBgToggle = document.getElementById('alt-bg-toggle');
-        const altBgInputsContainer = document.getElementById('alt-bg-inputs-container');
+    const settingsBtn = document.getElementById('settings-btn');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const closePanelBtn = document.getElementById('close-panel-btn');
+        
+    const bgUrlInput = document.getElementById('bg-url-input');
+    const setBgBtn = document.getElementById('set-bg-btn');
+    const bgFileInput = document.getElementById('bg-file-input');
+    const resetBgBtn = document.getElementById('reset-bg-btn');
 
-        // --- VARIABLES GLOBALES ---
-        let altBgInterval = null;
-        let currentAltBgIndex = 0;
+    const showSecondsToggle = document.getElementById('show-seconds-toggle');
+    const hourFormatToggle = document.getElementById('hour-format-toggle');
+    const textColorPicker = document.getElementById('text-color-picker');
+    const resetColorBtn = document.getElementById('reset-color-btn');
+    const fontSelect = document.getElementById('font-select');
 
-        // --- OBJETO DE CONFIGURACIÓN ---
-        const defaultSettings = {
-            bgUrl: null, // Fondo manual estático
-            textColor: '#FFFFFF',
-            showSeconds: true,
-            is24Hour: true,
-            fontFamily: "'Inter', sans-serif",
-            useAlternatingBgs: false,
-            alternatingBgSources: Array(10).fill({ type: null, value: null }) // Almacena {type: 'url'|'data', value: '...'}
-        };
-        let settings = { ...defaultSettings };
+    const altBgToggle = document.getElementById('alt-bg-toggle');
+    const altBgInputsContainer = document.getElementById('alt-bg-inputs-container');
 
-        // --- LÓGICA DEL RELOJ ---
-        const dateOptions = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
+    let altBgInterval = null;
+    let currentAltBgIndex = 0;
 
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            let mainTimeString = '';
-            const secondsString = `:${seconds}`;
+    const defaultSettings = {
+        bgUrl: null,
+        textColor: '#FFFFFF',
+        showSeconds: true,
+        is24Hour: true,
+        fontFamily: "'Inter', sans-serif",
+        useAlternatingBgs: false,
+        alternatingBgSources: Array(10).fill({ type: null, value: null }) // Almacena {type: 'url'|'data', value: '...'}
+    };
+    let settings = { ...defaultSettings };
 
-            if (settings.is24Hour) {
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        let mainTimeString = '';
+        const secondsString = `:${seconds}`;
+
+        if (settings.is24Hour) {
                 mainTimeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
-            } else {
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12;
-                mainTimeString = `${hours}:${minutes} ${ampm}`;
-            }
-            timeDisplay.textContent = mainTimeString;
-            secondsDisplay.textContent = secondsString;
-
-            const dateString = (now.toLocaleDateString('es-ES', dateOptions)).replace(/^\w/, (c) => c.toUpperCase());
-            if (dateDisplay.textContent !== dateString) {
-                dateDisplay.textContent = dateString;
-            }
+        } else {
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            mainTimeString = `${hours}:${minutes} ${ampm}`;
         }
+        timeDisplay.textContent = mainTimeString;
+        secondsDisplay.textContent = secondsString;
 
-        // --- LÓGICA DE FONDOS ALTERNOS ---
-
-        // Función auxiliar para aplicar el oscurecimiento a la URL de la imagen
+        const dateString = (now.toLocaleDateString('es-ES', dateOptions)).replace(/^\w/, (c) => c.toUpperCase());
+        if (dateDisplay.textContent !== dateString) {
+            dateDisplay.textContent = dateString;
+        }
+    }
+        
         function getDarkenedBackground(imageUrl) {
             if (!imageUrl) return 'none';
-            // Ajusta la opacidad del color rgba aquí (0.4 es 40% de opacidad)
-            // Puedes cambiar rgba(0,0,0,0.4) a rgba(0,0,0,0.6) para un fondo más oscuro si es necesario.
             return `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${imageUrl})`;
         }
 
@@ -335,7 +317,7 @@
 
         function setNextAlternatingBg(validSources) {
             if (validSources.length === 0) {
-                mainBody.style.backgroundImage = 'none'; // Sin fotos, fondo negro
+                mainBody.style.backgroundImage = 'none';
                 return;
             }
             const source = validSources[currentAltBgIndex];
@@ -346,89 +328,71 @@
         }
 
         function startAlternatingBackgrounds() {
-            stopAlternatingBackgrounds(); // Detener cualquier timer anterior
+            stopAlternatingBackgrounds();
             const validSources = settings.alternatingBgSources.filter(src => src && src.value);
             
-            setNextAlternatingBg(validSources); // Poner la primera imagen inmediatamente
+            setNextAlternatingBg(validSources);
             
             if (validSources.length > 0) {
-                // Rotar cada 10 minutos
                 altBgInterval = setInterval(() => setNextAlternatingBg(validSources), 10 * 60 * 1000);
             }
         }
 
-        // --- LÓGICA DE CONFIGURACIÓN ---
-
         function saveSettings() {
-            // Protección contra error de límite de localStorage
             try {
-                localStorage.setItem('clockSettingsV11', JSON.stringify(settings)); // Clave V11
+                localStorage.setItem('clockSettingsV11', JSON.stringify(settings));
             } catch (e) {
                 console.error("Error al guardar la configuración (límite de localStorage excedido?):", e);
-                // No se pudo guardar, probablemente porque las imágenes (DataURL) son muy grandes
             }
         }
 
         function applySettings() {
-            // Aplicar color y fuente
             clockContainer.style.color = settings.textColor;
             timeDisplay.style.fontFamily = settings.fontFamily;
             secondsDisplay.style.fontFamily = settings.fontFamily;
-            dateDisplay.style.fontFamily = settings.fontFamily; // Aplicar fuente también a la fecha
-            // Mostrar/ocultar segundos
+            dateDisplay.style.fontFamily = settings.fontFamily;
             secondsDisplay.style.display = settings.showSeconds ? 'block' : 'none';
 
-            // --- Lógica de Fondo ---
+
             if (settings.useAlternatingBgs) {
                 startAlternatingBackgrounds();
             } else {
                 stopAlternatingBackgrounds();
-                // Aplicar fondo manual (estático)
                 mainBody.style.backgroundImage = getDarkenedBackground(settings.bgUrl);
                 mainBody.style.backgroundSize = 'cover';
                 mainBody.style.backgroundPosition = 'center';
             }
             
-            // Actualizar reloj para formato
             updateClock();
         }
 
         function loadSettings() {
-            const savedSettings = localStorage.getItem('clockSettingsV11'); // Clave V11
+            const savedSettings = localStorage.getItem('clockSettingsV11');
             if (savedSettings) {
                 settings = { ...defaultSettings, ...JSON.parse(savedSettings) };
-                // Asegurarse de que el array tenga 10 elementos
                 settings.alternatingBgSources = (settings.alternatingBgSources || Array(10).fill({ type: null, value: null })).concat(Array(10).fill({ type: null, value: null })).slice(0, 10);
             }
             
-            // Actualizar la UI del panel de config
             showSecondsToggle.checked = settings.showSeconds;
             hourFormatToggle.checked = settings.is24Hour;
             textColorPicker.value = settings.textColor;
             fontSelect.value = settings.fontFamily;
-            
-            // Cargar fondo manual
+
             if (settings.bgUrl && !settings.bgUrl.startsWith('data:')) {
                 bgUrlInput.value = settings.bgUrl;
             }
 
-            // Cargar fondos alternos
             altBgToggle.checked = settings.useAlternatingBgs;
             if (settings.useAlternatingBgs) {
                 altBgInputsContainer.classList.remove('hidden');
             } else {
                 altBgInputsContainer.classList.add('hidden');
             }
-            // (Re)generar los 10 inputs de fondos alternos
             generateAltBgInputs();
-
-            // Aplicar configuraciones cargadas
             applySettings();
         }
 
-        // --- Generador de Inputs para Fondos Alternos ---
         function generateAltBgInputs() {
-            // Limpiar y poner títulos
             altBgInputsContainer.innerHTML = `
                 <label class="text-xs text-gray-300">Añade URLs o sube archivos (rotan cada 10 min):</label>
                 <p class="text-xs text-yellow-400/80 my-1">Nota: Los archivos subidos de más de 2-3MB pueden no guardarse al recargar.</p>
@@ -441,7 +405,6 @@
                 group.className = 'alt-bg-input-group';
                 group.dataset.index = i;
 
-                // Input de URL
                 const urlInput = document.createElement('input');
                 urlInput.type = 'text';
                 urlInput.placeholder = `URL de imagen ${i + 1}`;
@@ -450,41 +413,36 @@
                     urlInput.value = source.value;
                 }
                 
-                // Input de Archivo (oculto)
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
                 fileInput.id = `alt-bg-file-${i}`;
                 fileInput.className = 'alt-bg-file';
                 fileInput.accept = 'image/*';
 
-                // Label (botón) para el input de archivo
                 const fileLabel = document.createElement('label');
                 fileLabel.htmlFor = `alt-bg-file-${i}`;
                 fileLabel.title = 'Subir archivo';
                 fileLabel.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>`;
                 
-                // Botón de Limpiar
                 const clearBtn = document.createElement('span');
                 clearBtn.className = 'clear-alt-bg';
                 clearBtn.title = 'Borrar entrada';
                 clearBtn.innerHTML = '&times;';
 
-                // Mostrar URL o "Archivo subido"
                 if (source.type === 'data') {
                     urlInput.value = 'Archivo subido (local)';
                     urlInput.disabled = true;
                 }
 
-                // Añadir listeners
                 urlInput.addEventListener('change', (e) => {
                     const value = e.target.value.trim();
                     if (value) {
                         settings.alternatingBgSources[i] = { type: 'url', value: value };
                     } else {
-                        settings.alternatingBgSources[i] = { type: null, value: null }; // Limpiar si está vacío
+                        settings.alternatingBgSources[i] = { type: null, value: null };
                     }
                     saveSettings();
-                    if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                    if (settings.useAlternatingBgs) applySettings();
                 });
 
                 fileInput.addEventListener('change', (e) => {
@@ -493,10 +451,10 @@
                         const reader = new FileReader();
                         reader.onload = (re) => {
                             settings.alternatingBgSources[i] = { type: 'data', value: re.target.result };
-                            urlInput.value = 'Archivo subido (local)'; // Mostrar feedback
+                            urlInput.value = 'Archivo subido (local)';
                             urlInput.disabled = true;
                             saveSettings();
-                            if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                            if (settings.useAlternatingBgs) applySettings();
                         };
                         reader.readAsDataURL(file);
                     }
@@ -506,9 +464,9 @@
                     settings.alternatingBgSources[i] = { type: null, value: null };
                     urlInput.value = '';
                     urlInput.disabled = false;
-                    fileInput.value = null; // Resetear el input de archivo
+                    fileInput.value = null;
                     saveSettings();
-                    if (settings.useAlternatingBgs) applySettings(); // Recargar fondos
+                    if (settings.useAlternatingBgs) applySettings();
                 });
 
                 group.appendChild(urlInput);
@@ -519,27 +477,21 @@
             }
         }
 
-        // --- EVENT LISTENERS ---
-
-        // Panel de Configuración
         settingsBtn.addEventListener('click', () => settingsPanel.classList.remove('hidden'));
         closePanelBtn.addEventListener('click', () => settingsPanel.classList.add('hidden'));
 
-        // Config: Mostrar Segundos
         showSecondsToggle.addEventListener('change', () => {
             settings.showSeconds = showSecondsToggle.checked;
             applySettings();
             saveSettings();
         });
 
-        // Config: Formato de Hora
         hourFormatToggle.addEventListener('change', () => {
             settings.is24Hour = hourFormatToggle.checked;
             applySettings();
             saveSettings();
         });
 
-        // Config: Color de Texto
         textColorPicker.addEventListener('input', () => {
             settings.textColor = textColorPicker.value;
             applySettings();
@@ -553,14 +505,12 @@
             saveSettings();
         });
 
-        // Config: Fuente
         fontSelect.addEventListener('change', () => {
             settings.fontFamily = fontSelect.value;
             applySettings();
             saveSettings();
         });
 
-        // --- Fondos Alternos ---
         altBgToggle.addEventListener('change', () => {
             settings.useAlternatingBgs = altBgToggle.checked;
             if (settings.useAlternatingBgs) {
@@ -568,17 +518,15 @@
             } else {
                 altBgInputsContainer.classList.add('hidden');
             }
-            applySettings(); // Aplicar cambia el fondo (activa/desactiva)
+            applySettings();
             saveSettings();
         });
         
-        // --- Fondo Manual ---
-        // (Al usar fondo manual, se desactivan los alternos)
         setBgBtn.addEventListener('click', () => {
             const url = bgUrlInput.value.trim();
             if (url) {
                 settings.bgUrl = url;
-                settings.useAlternatingBgs = false; // Desactivar alternos
+                settings.useAlternatingBgs = false;
                 altBgToggle.checked = false;
                 altBgInputsContainer.classList.add('hidden');
                 applySettings();
@@ -593,7 +541,7 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     settings.bgUrl = e.target.result;
-                    settings.useAlternatingBgs = false; // Desactivar alternos
+                    settings.useAlternatingBgs = false;
                     altBgToggle.checked = false;
                     altBgInputsContainer.classList.add('hidden');
                     applySettings();
@@ -608,7 +556,7 @@
 
         resetBgBtn.addEventListener('click', () => {
             settings.bgUrl = defaultSettings.bgUrl;
-            settings.useAlternatingBgs = false; // Desactivar alternos
+            settings.useAlternatingBgs = false;
             altBgToggle.checked = false;
             altBgInputsContainer.classList.add('hidden');
             bgUrlInput.value = '';
@@ -618,7 +566,6 @@
             settingsPanel.classList.add('hidden');
         });
 
-        // --- PANTALLA COMPLETA ---
         fullscreenBtn.addEventListener('click', toggleFullScreen);
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
@@ -634,22 +581,19 @@
         
         document.addEventListener('fullscreenchange', () => {
             const isFullscreen = !!document.fullscreenElement;
-            // El botón de pantalla completa se oculta, los otros (config y radio/spotify) permanecen visibles.
             fullscreenBtn.classList.toggle('opacity-0', isFullscreen);
         });
 
-        // --- INICIAR ---
         try {
-            loadSettings(); // Cargar configuraciones al inicio
+            loadSettings();
         } catch (e) {
             console.error("Error al cargar configuración (posiblemente corrupta):", e);
-            localStorage.removeItem('clockSettingsV11'); // Limpiar config corrupta
-            // Cargar configuración por defecto si falla
-            applySettings(); // Aplica 'defaultSettings'
+            localStorage.removeItem('clockSettingsV11');
+            applySettings();
         }
         
-        updateClock(); // Llamada inicial para evitar el "00:00"
-        setInterval(updateClock, 1000); // Iniciar el bucle del reloj
+        updateClock();
+        setInterval(updateClock, 1000);
 
     </script>
 </body>
