@@ -4,13 +4,13 @@ Este es un proyecto personal para crear un reloj digital minimalista, personaliz
 
 Originalmente, este proyecto nació con la idea de tener un reloj siempre visible y estético en mi dispositivo **Movistar Home (Aura)**. Como muchos sabrán, Movistar descontinuó el soporte para este dispositivo, dejándolo esencialmente como un pisapapeles digital.
 
-Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo o también tener la opción de abrirlo con su URL desde un navegador en el Movistar Aura **[https://jmlopez-pruebas.github.io/reloj](https://jmlopez-pruebas.github.io/reloj/)**
+Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo o también tener la opción de abrirlo con su URL (<a href="https://jmlopez-pruebas.github.io/reloj" target="_blank">https://jmlopez-pruebas.github.io/reloj/</a>) desde un navegador web en el Movistar Aura 
 
 ## El Hack: Reviviendo el Movistar Home
 
 El corazón de este proyecto no es solo el reloj, sino la capacidad de volver a usar el hardware abandonado. Esto fue posible gracias al increíble trabajo documentado en el repositorio:
 
-➡️ **[https://github.com/zry98/movistar-home-hacks](https://github.com/zry98/movistar-home-hacks)**
+➡️ <a href="https://github.com/zry98/movistar-home-hacks" target="_blank">github.com/zry98/movistar-home-hacks</a>
 
 Siguiendo las instrucciones de ese repositorio, pude "liberar" el dispositivo y obtener la capacidad de cargar páginas web personalizadas (como este reloj) en lugar del software obsoleto de Movistar.
 
@@ -32,9 +32,9 @@ Este no es un simple reloj. Gracias a la asistencia de **Gemini de Google** dura
 * **Modo Pantalla Completa:** Botón para ocultar la interfaz del navegador.
 * **Persistencia:** Toda tu configuración (color, fuente, fondos, etc.) se guarda en el `localStorage` del navegador para que esté lista la próxima vez que cargues la página.
 
-He recopilado también una serie de imágenes que pueden servir para poner de fondo en el reloj ➡️ **[Google Drive](https://drive.google.com/drive/folders/1LaHrwe_a2oZrQL4t407ekUbcMjhS_daU?usp=sharing)**
+He recopilado también una serie de imágenes que pueden servir para poner de fondo en el reloj ➡️ <a href="https://drive.google.com/drive/folders/1LaHrwe_a2oZrQL4t407ekUbcMjhS_daU?usp=sharing" target="_blank">Google Drive</a>
 
 ## ✨ Agradecimientos
 
-* A **zry98** y a todos los contribuidores del repositorio [movistar-home-hacks](https://github.com/zry98/movistar-home-hacks) por hacer posible que recuperemos nuestros dispositivos.
+* A **zry98** y a todos los contribuidores del repositorio <a href="https://github.com/zry98/movistar-home-hacks" target="_blank">movistar-home-hacks</a> por hacer posible que recuperemos nuestros dispositivos.
 * A **Gemini de Google**, por su inestimable ayuda en la generación, depuración y refactorización del código de este proyecto.
