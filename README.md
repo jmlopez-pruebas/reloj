@@ -4,7 +4,9 @@ Este es un proyecto personal para crear un reloj digital minimalista, personaliz
 
 Originalmente, este proyecto nació con la idea de tener un reloj siempre visible y estético en mi dispositivo **Movistar Home (Aura)**. Como muchos sabrán, Movistar descontinuó el soporte para este dispositivo, dejándolo esencialmente como un pisapapeles digital.
 
-Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo o también tener la opción de abrirlo con su URL (<a href="https://jmlopez-pruebas.github.io/reloj" target="_blank">https://jmlopez-pruebas.github.io/reloj/</a>) desde un navegador web en el Movistar Aura 
+Este repositorio contiene el código HTML, CSS y JavaScript de ese reloj (el cual ahora utilizo para darle una segunda vida al dispositivo) en un único `index.html` para así poder descargarlo y meterlo directamente en el dispositivo o también tener la opción de abrirlo con su URL (<a href="https://jmlopez-pruebas.github.io/reloj" target="_blank">https://jmlopez-pruebas.github.io/reloj/</a>) desde un navegador web en el Movistar Aura.
+
+*Idea original de @josemaalopez para su uso en Movistar Home, u otros dispositivos con pantalla grande.*
 
 ## El Hack: Reviviendo el Movistar Home
 
@@ -14,23 +16,26 @@ El corazón de este proyecto no es solo el reloj, sino la capacidad de volver a 
 
 Siguiendo las instrucciones de ese repositorio, pude "liberar" el dispositivo y obtener la capacidad de cargar páginas web personalizadas (como este reloj) en lugar del software obsoleto de Movistar.
 
-## 🚀 Características del Reloj
+## 🚀 Características del Reloj (V2)
 
-Este no es un simple reloj. Gracias a la asistencia de **Gemini de Google** durante el desarrollo, he podido integrar un panel de configuración completo:
+Este no es un simple reloj. He integrado un panel de configuración completo con una estética "Liquid Glass" moderna, fluida y altamente cuidada:
 
-* **Reloj Digital Limpio:** Muestra la fecha, la hora (HH:MM) y los segundos.
-* **Fondo Atenuado:** Cualquier imagen de fondo se oscurece automáticamente para garantizar que la hora siempre sea legible con su opacidad original.
-* **Panel de Configuración (Oculto):**
-    * **Formato de Hora:** Cambiar entre formato 12/24 horas.
-    * **Segundos:** Ocultar o mostrar los segundos.
-    * **Color del Texto:** Selector de color para personalizar la fuente.
-    * **Tipografía:** Múltiples fuentes modernas para elegir (Inter, Oswald, Bebas Neue, etc.).
-* **Gestión de Fondos:**
+* **Reloj Digital Limpio:** Muestra la fecha, la hora (12/24H) y los segundos con centrado matemático perfecto sin importar a qué tamaño lo escales.
+* **Fondo Atenuado y Dinámico:** 
+    * **Carrusel Predeterminado:** Una selección de paisajes urbanos de alta calidad.
     * **Fondo Manual:** Establece un fondo estático subiendo un archivo o pegando una URL.
-    * **Fondos Alternos:** Activa un carrusel de hasta 10 imágenes (mezclando URLs y archivos subidos) que rotan cada 10 minutos.
-* **Enlaces Rápidos:** Acceso directo para abrir Spotify o Radio FM (pensado para la tablet).
-* **Modo Pantalla Completa:** Botón para ocultar la interfaz del navegador.
-* **Persistencia:** Toda tu configuración (color, fuente, fondos, etc.) se guarda en el `localStorage` del navegador para que esté lista la próxima vez que cargues la página.
+    * **Carrusel Personalizado:** Añade hasta 10 imágenes (mezclando URLs y archivos locales) que rotan automáticamente cada 10 minutos con transiciones suaves. Cualquier imagen se oscurece automáticamente para garantizar que la interfaz siempre sea legible.
+* **Clima Inteligente:** Buscador integrado con autocompletado en tiempo real que muestra la temperatura y un icono minimalista según la condición meteorológica de tu ciudad.
+* **Temporizador Pomodoro Avanzado:** 
+    * Gestión independiente de tiempos de "Trabajo" y "Descanso".
+    * Modo "Mini Widget" flotante inteligente si lo minimizas mientras sigue corriendo.
+    * Alertas sonoras personalizables (usa la integrada o pega tu propia URL mp3 desde plataformas como tstore.ouim.me).
+    * Edición de tiempo intuitiva mediante botones (+ / -) o clicando para escribir directamente el número.
+* **Panel de Configuración Completo:**
+    * Modifica el tamaño individual del Reloj, Clima, Botones y del Mini Pomodoro.
+    * Personaliza la tipografía (Inter, Oswald, Bebas Neue, Montserrat, etc.) y el color del texto.
+* **Enlaces Rápidos:** Accesos directos centrales para abrir Spotify o Radio FM (ideal para tablets).
+* **Persistencia Total:** Toda tu configuración se guarda de forma local en el navegador (`localStorage`) para que todo esté tal y como lo dejaste al volver a abrir la página.
 
 He recopilado también una serie de imágenes que pueden servir para poner de fondo en el reloj ➡️ <a href="https://drive.google.com/drive/folders/1LaHrwe_a2oZrQL4t407ekUbcMjhS_daU?usp=sharing" target="_blank">Google Drive</a>
 
